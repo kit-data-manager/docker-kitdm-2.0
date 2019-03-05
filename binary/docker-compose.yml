@@ -1,0 +1,27 @@
+version: '2'
+services:
+   rabbitmq:
+      image: rabbitmq:3
+      container_name: rabbitmq
+
+   database:
+      build: ./postgres
+      container_name: database
+      environment:
+         - PGPASSWORD=docker
+         - POSTGRES_USER=docker
+         - POSTGRES_PASSWORD=docker
+         - POSTGRES_DB=kitdm20
+   tomcat:
+      build: ./tomcat
+      container_name: tomcat
+      ports: 
+        - "8090:8080"
+      volumes:
+        - ./data:/kitdm20/data/
+      links:
+        - database
+        - rabbitmq
+      environment:
+        - DATABASE_PORT_5432_TCP_ADDR=database
+        - RABBITMQ_PORT_4369_TCP_ADDR=rabbitmq 
