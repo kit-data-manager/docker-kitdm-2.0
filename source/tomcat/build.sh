@@ -6,20 +6,8 @@ cd /kitdm20/
 git clone --recursive https://github.com/kit-data-manager/base-repo.git
 cd base-repo
 
-echo "Initializing and updating submodules."
-git submodule update --init
-git submodule foreach git pull origin master
-
-echo "Building submodules from source."
-cd libraries/service-base
-./gradlew install
-cd ../
-cd generic-message-consumer
-./gradlew install
-cd ../../
-
-echo "Building repository from source."
-./gradlew build -Prelease
+echo "Building submodules and project from source."
+./gradlew -Prelease build
 
 echo "Copying service and configuration files to release folder."
 mkdir release
