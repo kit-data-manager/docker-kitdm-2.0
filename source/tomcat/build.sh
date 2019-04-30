@@ -7,7 +7,7 @@ git clone --recursive https://github.com/kit-data-manager/base-repo.git
 cd base-repo
 
 echo "Building submodules and project from source."
-./gradlew -Prelease build
+./gradlew -Pclean-release build
 
 echo "Copying service and configuration files to release folder."
 mkdir release
