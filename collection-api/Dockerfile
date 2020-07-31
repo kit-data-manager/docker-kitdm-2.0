@@ -23,7 +23,6 @@ RUN mkdir -p /collection-api/config/
 COPY --from=build-collection-api /collection-api/collection-api/build/libs/collection-api-0.1.jar /collection-api/collection-api.jar
 COPY conf/application.properties /collection-api/config/application.properties
 COPY run.sh /collection-api/
-RUN chmod +x /collection-api/run.sh
 
 EXPOSE 8080
-CMD ["/collection-api/run.sh"]
+ENTRYPOINT ["sh", "/collection-api/run.sh"]
