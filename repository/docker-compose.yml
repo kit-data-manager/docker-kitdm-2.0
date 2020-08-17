@@ -17,7 +17,7 @@ services:
       ports: 
         - "8090:8080"
       volumes:
-        - ./data:/kitdm20/data/
+        - ./data:/var/repository
       links:
         - database
         - rabbitmq
