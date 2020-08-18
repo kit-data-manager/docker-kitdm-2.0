@@ -7,6 +7,6 @@ git clone --branch 1.0 --recursive https://github.com/kit-data-manager/base-repo
 cd base-repo
 
 echo "Building project from source."
-./gradlew -Pclean-release build
+./gradlew build
 
 echo "Build done."
