@@ -20,7 +20,7 @@ LABEL stage=run
 
 RUN mkdir -p /var/repository
 RUN mkdir -p /base-repo/config/
-COPY --from=build-base-repo /base-repo/base-repo/build/libs/base-repo.jar /base-repo/base-repo.jar
+COPY --from=build-base-repo /base-repo/base-repo/build/libs/base-repo-1.0.jar /base-repo/base-repo.jar
 COPY conf/application.properties /base-repo/config/application.properties
 COPY run.sh /base-repo/
 
