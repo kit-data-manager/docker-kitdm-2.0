@@ -19,7 +19,7 @@ MAINTAINER webmaster@datamanager.kit.edu
 LABEL stage=run
 
 RUN mkdir -p /admin-service/config/
-COPY --from=build-admin-service /admin-service/admin-service/build/libs/admin-service-0.1.jar /admin-service/admin-service.jar
+COPY --from=build-admin-service /admin-service/admin-service/build/libs/admin-service.jar /admin-service/admin-service.jar
 COPY conf/application.properties /admin-service/config/application.properties
 COPY run.sh /admin-service/
 
