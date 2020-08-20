@@ -1,6 +1,14 @@
 # docker-kitdm-2.0
 
-This repository contains a collection of docker images to run KIT DM 2.0 repository instances easily. The main purpose of such instances is for testing, however, they can also be easily adapted for production use, e.g. by introducing database backups and container restarts on failure.
+This repository contains a collection of docker images to run KIT DM 2.0 repository instances easily as well as more complex setups utilizing multiple images via docker-compose. The main purpose of such instances is for testing, however, they can also be easily adapted for production use, e.g. by introducing database backups and container restarts on failure. All single-service images are build and hosted at [DockerHub](https://hub.docker.com/) and can be found under the namespace ***kitdm***. 
+
+# Build Status
+
+| Service |Build Status|
+|---|---|
+| base-repo | ![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/kitdm/base-repo) |
+| collection-api | ![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/kitdm/collection-api) | 
+| admin-service | ![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/kitdm/admin-service) |
 
 ## Prerequisites
 
@@ -9,30 +17,47 @@ This repository contains a collection of docker images to run KIT DM 2.0 reposit
 
 ## Building and Startup
 
-Before you start building your docker images you have to choose between two different ways of creating your repository instance: 
+Typically, there is no need for locally building single-service images hosted in this repository as all version are accessible via [DockerHub](https://hub.docker.com/).
 
-1. Building from source. If you want to pull the sources from GitHub from an arbitrary branch. In that case, you should switch into the 'source' folder before continuing.
-2. Building using pre-compiled binary. If you built the repository service binary on your own and want to use it inside docker, you should switch into the 'binary' folder before continuing.  
-
-Let's assume you want to use an existing binary and you are already in the 'binary' folder. Now, you should place the binary in a file named 'base-repo.jar' in the 'tomcat' folder. After doing this, all subsequent commands are identical for both approaches, the 'binary' and the 'source'.
+Running for example a base-repo instance can be achieved as follows:
 
 ```
-user@localhost:/home/user/docker-kitdm-2.0/source$ docker-compose up
-Creating network "source_default" with the default driver
-Building database
-Step 1/2 : FROM postgres:11
- ---> f97a959a7d9c
-[....]
-tomcat      | Spring is running!
+user@localhost:/home/user/$ docker run -p 8080:8080 kitdm/base-repo
+[...]
+user@localhost:/home/user/$
 ```
 
-This procedure should take only a few seconds in case of using a binary. If you build everything from source, the procedure may take a few minutes. As soon as you see the message that Spring is running, you are able to access the repository. Without changing anything, the repository will be accessible via 
+The same applies to all single-service images, e.g. collection-api or admin-service.
+In some cases, you may want to change the configuration of the service instance. All service-specific configuration is located in each image at
 
-http://localhost:8090/api/v1/
+```/<service-name>/conf/application.properties```
 
-A documentation guiding you through the first steps you'll find at
+You can easily overwrite this file by creating an own Dockerfile, which looks as follows in case of the base-repo service:
 
-http://localhost:8090/static/docs/documentation.html
+```
+FROM kitdm/base-repo:latest
+
+COPY application.properties /base-repo/config/application.properties
+```
+
+Afterwards, you have to build the modified image locally by calling:
+
+```
+user@localhost:/home/user/my-base-repo/$ docker build .
+[...]
+user@localhost:/home/user/my-base-repo/$
+```
+
+Now, you can start the container using your modified configuration.
+
+For more complex setups, e.g. the one stored in the `testbed` folder, we utilize docker-compose. The entire setup can be build by calling:
+
+```
+user@localhost:/home/user/docker-kitdm-2.0/testbed/$ docker-compose up
+[...]
+user@localhost:/home/user/docker-kitdm-2.0/testbed/$
+```
+
 
 ## License
 
