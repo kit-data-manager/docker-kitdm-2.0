@@ -5,7 +5,7 @@ LABEL stage=build-env
 RUN apt-get update && \
     apt-get upgrade --assume-yes && \
     apt-get install --assume-yes git && \
-    mkdir -p /collection-api/
+    mkdir -p /base-repo/
 
 FROM build-env-java AS build-base-repo
 MAINTAINER webmaster@datamanager.kit.edu

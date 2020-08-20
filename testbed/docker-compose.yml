@@ -1,0 +1,46 @@
+version: '2'
+services:
+   rabbitmq:
+      image: rabbitmq:3
+      container_name: rabbitmq
+   database:
+      build: ./postgres
+      container_name: database
+      environment:
+         - PGPASSWORD=docker
+         - POSTGRES_USER=docker
+         - POSTGRES_PASSWORD=docker
+         - POSTGRES_DB=kitdm20
+   kitdm:
+      build: ./base-repo
+      container_name: base-repo
+      ports: 
+        - "8080:8080"
+      volumes:
+        - ./data:/var/repository
+      links:
+        - database
+        - rabbitmq
+        - admin-service
+      environment:
+        - DATABASE_PORT_5432_TCP_ADDR=database
+        - RABBITMQ_PORT_4369_TCP_ADDR=rabbitmq 
+   collection-api:
+      build: ./collection-api
+      container_name: collection-api
+      ports: 
+        - "8070:8070"
+      links:
+        - database
+        - admin-service
+      environment:
+        - DATABASE_PORT_5432_TCP_ADDR=database
+   admin-service:
+      build: ./admin-service
+      container_name: admin-service
+      ports: 
+        - "8060:8060"
+      links:
+        - database
+      environment:
+        - DATABASE_PORT_5432_TCP_ADDR=database
