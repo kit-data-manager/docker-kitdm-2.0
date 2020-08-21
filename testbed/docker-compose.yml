@@ -33,11 +33,12 @@ services:
         - "8070:8070"
       links:
         - database
+        - rabbitmq
       environment:
         - DATABASE_PORT_5432_TCP_ADDR=database
         - RABBITMQ_PORT_4369_TCP_ADDR=rabbitmq
-        - ADMIN-SERVICE_PORT_8060_TCP_ADDR=admin-service 
         - COLLECTION-API_PORT_8070_TCP_ADDR=collection-api
+        - ADMIN-SERVICE_PORT_8060_TCP_ADDR=admin-service 
    admin-service:
       build: ./admin-service
       container_name: admin-service
