@@ -1,14 +1,6 @@
 # docker-kitdm-2.0
 
-This repository contains a collection of docker images to run KIT DM 2.0 repository instances easily as well as more complex setups utilizing multiple images via docker-compose. The main purpose of such instances is for testing, however, they can also be easily adapted for production use, e.g. by introducing database backups and container restarts on failure. All single-service images are build and hosted at [DockerHub](https://hub.docker.com/) and can be found under the namespace ***kitdm***. 
-
-# Build Status
-
-| Service |Build Status|
-|---|---|
-| base-repo | ![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/kitdm/base-repo) |
-| collection-api | ![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/kitdm/collection-api) | 
-| admin-service | ![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/kitdm/admin-service) |
+This repository contains a collection of docker setups to run different KIT DM 2.0 repository infrastructures easily. The main purpose of such infrastructures is for testing, however, they can also be easily adapted for production use, e.g. by introducing database backups and container restarts on failure. All single services are build and hosted at [DockerHub](https://hub.docker.com/) and can be found under the namespace ***kitdm***. 
 
 ## Prerequisites
 
@@ -17,40 +9,7 @@ This repository contains a collection of docker images to run KIT DM 2.0 reposit
 
 ## Building and Startup
 
-Typically, there is no need for locally building single-service images hosted in this repository as all version are accessible via [DockerHub](https://hub.docker.com/).
-
-Running for example a base-repo instance can be achieved as follows:
-
-```
-user@localhost:/home/user/$ docker run -p 8080:8080 kitdm/base-repo
-[...]
-user@localhost:/home/user/$
-```
-
-The same applies to all single-service images, e.g. collection-api or admin-service.
-In some cases, you may want to change the configuration of the service instance. All service-specific configuration is located in each image at
-
-```/<service-name>/conf/application.properties```
-
-You can easily overwrite this file by creating an own Dockerfile, which looks as follows in case of the base-repo service:
-
-```
-FROM kitdm/base-repo:latest
-
-COPY application.properties /base-repo/config/application.properties
-```
-
-Afterwards, you have to build the modified image locally by calling:
-
-```
-user@localhost:/home/user/my-base-repo/$ docker build .
-[...]
-user@localhost:/home/user/my-base-repo/$
-```
-
-Now, you can start the container using your modified configuration.
-
-For more complex setups, e.g. the one stored in the `testbed` folder, we utilize docker-compose. The entire setup can be build by calling:
+The setup and linking of complex repository infrastructures is realized via docker-compose. In order to trigger the build process and run the setup, you only have to call e.g.:
 
 ```
 user@localhost:/home/user/docker-kitdm-2.0/testbed/$ docker-compose up
@@ -58,6 +17,30 @@ user@localhost:/home/user/docker-kitdm-2.0/testbed/$ docker-compose up
 user@localhost:/home/user/docker-kitdm-2.0/testbed/$
 ```
 
+This will pull all images from [DockerHub](https://hub.docker.com/), apply required modifications and startup the infrastructure. 
+If you apply own modifications, you may trigger a build process before running the setup again. This can be done via: 
+
+```
+user@localhost:/home/user/docker-kitdm-2.0/testbed/$ docker-compose stop
+[...]
+user@localhost:/home/user/docker-kitdm-2.0/testbed/$ docker-compose build
+[...]
+user@localhost:/home/user/docker-kitdm-2.0/testbed/$ docker-compose up
+[...]
+user@localhost:/home/user/docker-kitdm-2.0/testbed/$
+```
+
+If you want to remove all containers created for a certain setup, you just have to call:
+
+```
+user@localhost:/home/user/docker-kitdm-2.0/testbed/$ docker-compose rm
+Going to remove admin-service, collection-api, base-repo, rabbitmq, database
+Are you sure? [yN]
+[...]
+user@localhost:/home/user/docker-kitdm-2.0/testbed/$
+```
+
+:information_source: Keep in mind, that this will NOT remove downloaded images. :information_source: 
 
 ## License
 
