@@ -3,6 +3,21 @@ services:
    rabbitmq:
       image: rabbitmq:3
       container_name: rabbitmq
+   elastic:
+      image: elasticsearch:7.17.8
+      container_name: elastic
+      environment:
+        - node.name=elastic
+        - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      ulimits:
+        memlock:
+         soft: -1
+         hard: -1
+      ports:
+      - "9200:9200"
+      volumes:
+        - ./elastic-data:/usr/share/elasticsearch/data
+        - ./elastic/etc/sysctl.conf:/etc/sysctl.conf
    database:
       build: ./postgres
       container_name: database
@@ -18,37 +33,27 @@ services:
         - "8080:8080"
       volumes:
         - ./data:/var/repository
+        - ./base-repo:/opt/base-repo
       links:
         - database
         - rabbitmq
       environment:
         - DATABASE_PORT_5432_TCP_ADDR=database
         - RABBITMQ_PORT_4369_TCP_ADDR=rabbitmq
+        - ELASTIC_PORT_9200_TCP_ADDR=elastic
         - BASE-REPO_PORT_8080_TCP_ADDR=base-repo
         - ADMIN-SERVICE_PORT_8060_TCP_ADDR=admin-service
-   collection-api:
-      build: ./collection-api
-      container_name: collection-api
-      ports: 
-        - "8070:8070"
-      links:
-        - database
-        - rabbitmq
-      environment:
-        - DATABASE_PORT_5432_TCP_ADDR=database
-        - RABBITMQ_PORT_4369_TCP_ADDR=rabbitmq
-        - COLLECTION-API_PORT_8070_TCP_ADDR=collection-api
-        - ADMIN-SERVICE_PORT_8060_TCP_ADDR=admin-service 
    admin-service:
       build: ./admin-service
       container_name: admin-service
       ports: 
         - "8060:8060"
+      volumes:
+        - ./admin-service:/opt/admin-service
       links:
         - database
-        - base-repo
-        - collection-api
+        - rabbitmq
       environment:
         - DATABASE_PORT_5432_TCP_ADDR=database
-        - BASE-REPO_PORT_8080_TCP_ADDR=base-repo
-        - COLLECTION-API_PORT_8070_TCP_ADDR=collection-api
+        - RABBITMQ_PORT_4369_TCP_ADDR=rabbitmq
+        - ELASTIC_PORT_9200_TCP_ADDR=elastic
