@@ -1,0 +1,23 @@
+[2m2023-01-17 11:37:25.674[0;39m [32m INFO[0;39m [35m9[0;39m [2m---[0;39m [2m[           main][0;39m [36me.k.d.gateway.GatewayApplication        [0;39m [2m:[0;39m Starting GatewayApplication using Java 16.0.2 on 8f52431c9fe2 with PID 9 (/opt/gateway/gateway.jar started by root in /opt/gateway)
+ [2m2023-01-17 11:37:25.696[0;39m [32m INFO[0;39m [35m9[0;39m [2m---[0;39m [2m[           main][0;39m [36me.k.d.gateway.GatewayApplication        [0;39m [2m:[0;39m No active profile set, falling back to 1 default profile: "default"
+ [2m2023-01-17 11:37:37.971[0;39m [33m WARN[0;39m [35m9[0;39m [2m---[0;39m [2m[           main][0;39m [36monfigReactiveWebServerApplicationContext[0;39m [2m:[0;39m Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'nettyWriteResponseFilter' defined in class path resource [org/springframework/cloud/gateway/config/GatewayAutoConfiguration$NettyConfiguration.class]: Unsatisfied dependency expressed through method 'nettyWriteResponseFilter' parameter 0; nested exception is org.springframework.boot.context.properties.ConfigurationPropertiesBindException: Error creating bean with name 'gatewayProperties': Could not bind properties to 'GatewayProperties' : prefix=spring.cloud.gateway, ignoreInvalidFields=false, ignoreUnknownFields=true; nested exception is org.springframework.boot.context.properties.bind.BindException: Failed to bind properties under 'spring.cloud.gateway.routes[0].predicates' to java.util.List<org.springframework.cloud.gateway.handler.predicate.PredicateDefinition>
+ [2m2023-01-17 11:37:38.489[0;39m [31mERROR[0;39m [35m9[0;39m [2m---[0;39m [2m[           main][0;39m [36mo.s.b.d.LoggingFailureAnalysisReporter  [0;39m [2m:[0;39m 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Binding to target [Bindable@7a55af6b type = java.util.List<org.springframework.cloud.gateway.handler.predicate.PredicateDefinition>, value = 'provided', annotations = array<Annotation>[@javax.validation.constraints.NotEmpty(message="{javax.validation.constraints.NotEmpty.message}", payload={}, groups={}), @javax.validation.Valid()]] failed:
+
+    Property: spring.cloud.gateway.routes[0].predicates[0].path
+    Value: "/api/v1/dataresources/**"
+    Origin: URL [file:application.properties] - 89:52
+    Reason: The elements [spring.cloud.gateway.routes[0].predicates[0].path] were left unbound.
+
+Action:
+
+Update your application's configuration
+
+ 
