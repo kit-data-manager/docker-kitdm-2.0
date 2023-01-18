@@ -2,7 +2,7 @@
 # START GLOBAL DECLARATION
 ####################################################
 ARG REPO_NAME_DEFAULT=base-repo
-ARG REPO_PORT_DEFAULT=8080
+ARG REPO_PORT_DEFAULT=8081
 ARG SERVICE_ROOT_DIRECTORY_DEFAULT=/opt
 ####################################################
 # END GLOBAL DECLARATION
