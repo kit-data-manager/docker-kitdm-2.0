@@ -3,8 +3,6 @@ services:
    rabbitmq:
       image: rabbitmq:3
       container_name: rabbitmq
-      networks:
-        - backend
    elastic:
       image: elasticsearch:7.17.8
       container_name: elastic
@@ -22,8 +20,6 @@ services:
       volumes:
         - ./elastic-data:/usr/share/elasticsearch/data
         - ./elastic/etc/sysctl.conf:/etc/sysctl.conf
-      networks:
-        - backend
    database:
       build: ./postgres
       container_name: database
@@ -32,8 +28,6 @@ services:
          - POSTGRES_USER=docker
          - POSTGRES_PASSWORD=docker
          - POSTGRES_DB=kitdm20
-      networks:
-        - backend
    base-repo:
       build: ./base-repo
       container_name: base-repo
@@ -46,48 +40,25 @@ services:
         - database
         - rabbitmq
         - elastic
-        - admin-service
-      networks:
-        - backend
+        - monitoring-service
       environment:
         - DATABASE_PORT_5432_TCP_ADDR=database
         - RABBITMQ_PORT_4369_TCP_ADDR=rabbitmq
         - ELASTIC_PORT_9200_TCP_ADDR=elastic
         - BASE-REPO_PORT_8081_TCP_ADDR=base-repo
-        - ADMIN-SERVICE_PORT_8060_TCP_ADDR=admin-service
-   admin-service:
-      build: ./admin-service
-      container_name: admin-service
+        - MONITORING-SERVICE_PORT_8060_TCP_ADDR=monitoring-service
+   monitoring-service:
+      build: ./monitoring-service
+      container_name: monitoring-service
       ports: 
         - "8060:8060"
       volumes:
-        - ./admin-service:/opt/admin-service
+        - ./monitoring-service:/opt/monitoring-service
       links:
         - database
         - rabbitmq
         - elastic
-      networks:
-        - backend
       environment:
         - DATABASE_PORT_5432_TCP_ADDR=database
         - RABBITMQ_PORT_4369_TCP_ADDR=rabbitmq
         - ELASTIC_PORT_9200_TCP_ADDR=elastic
-   gateway:
-      build: ./gateway
-      container_name: gateway
-      ports:
-        - "8010:8010"
-      volumes:
-        - ./gateway:/opt/gateway
-      links:
-        - base-repo
-        - admin-service
-      networks:
-        - backend
-      environment:
-        - BASE-REPO_PORT_8081_TCP_ADDR=base-repo 
-        - ADMIN-SERVICE_PORT_8060_TCP_ADDR=admin-service
-networks:
-  backend:
-  # use the bridge driver, but enable IPv6
-    driver: bridge

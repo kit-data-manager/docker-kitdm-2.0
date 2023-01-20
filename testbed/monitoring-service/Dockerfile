@@ -1,15 +1,15 @@
 ####################################################
 # START GLOBAL DECLARATION
 ####################################################
-ARG REPO_NAME_DEFAULT=gateway
-ARG REPO_PORT_DEFAULT=8010
+ARG REPO_NAME_DEFAULT=monitoring-service
+ARG REPO_PORT_DEFAULT=8060
 ARG SERVICE_ROOT_DIRECTORY_DEFAULT=/opt
 ####################################################
 # END GLOBAL DECLARATION
 ####################################################
 
 ####################################################
-# Runtime environment 4 gateway
+# Runtime environment 4 monitoring-servoce
 ####################################################
 FROM openjdk:16-bullseye AS run-service-base-repo
 LABEL maintainer=webmaster@datamanager.kit.edu
